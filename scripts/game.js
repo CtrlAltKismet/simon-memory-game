@@ -2,6 +2,7 @@
     score: 0,
     currentGame: [],
     playerMoves: [],
+    turnNumber: 0,
     choices: ["button1", "button2", "button3", "button4"],
  }
 
@@ -9,6 +10,16 @@
     game.score = 0;
     game.currentGame = [];
     game.playerMoves = [];
+    for (let circle of document.getElementsByClassName("circle")) {
+        if (circle.getAttribute("data-listener") !== "true") {
+            circle.addEventListener("click", (e) => {
+                let move = e.AT_TARGET.getAttribute("id");
+                game.playerMoves.push(move);
+                playerTurn();
+            });
+            circle.setAttribute("data-listener", "true");
+        }
+    }
     showScore();
     addTurn();
  }
@@ -41,4 +52,15 @@ function addTurn() {
     }, 800);
  }
 
- module.exports = { game, newGame, showScore, addTurn, lightsOn, showTurns };
+ function playerTurn() {
+    let i = game.playerMoves.length - 1;
+    if (game.playerMoves[i] === game.currentGame[i]) {
+        game.score++;
+        showScore();
+        addTurn();
+    }
+ }
+
+
+
+ module.exports = { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn };
